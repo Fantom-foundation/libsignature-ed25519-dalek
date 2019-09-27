@@ -6,6 +6,8 @@ use core::hash::Hasher;
 use core::marker::PhantomData;
 use ed25519_dalek::{PUBLIC_KEY_LENGTH, SECRET_KEY_LENGTH, SIGNATURE_LENGTH};
 use libhash::Hash as LibHash;
+use libsignature::PublicKey as LibPublicKey;
+use libsignature::SecretKey as LibSecretKey;
 use libsignature::Signature as LibSignature;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
@@ -29,6 +31,10 @@ const DEFAULT_PUBLIC_KEY: PublicKey = PublicKey {
 const DEFAULT_SECRET_KEY: SecretKey = SecretKey {
     0: [0; SECRET_KEY_LENGTH],
 };
+
+impl LibSecretKey for SecretKey {}
+
+impl LibPublicKey for PublicKey {}
 
 impl<H: LibHash> LibSignature for Signature<H> {
     type Hash = H;
