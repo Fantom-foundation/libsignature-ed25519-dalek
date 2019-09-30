@@ -1,4 +1,5 @@
 use core::convert::TryInto;
+use core::fmt::Debug;
 use core::fmt::Display;
 use core::fmt::Formatter;
 use core::hash::Hash;
@@ -150,6 +151,18 @@ impl Display for PublicKey {
 }
 
 impl Display for SecretKey {
+    fn fmt(&self, f: &mut Formatter) -> core::fmt::Result {
+        let mut formatted = String::new();
+        formatted.push_str(&self.0[0].to_string());
+        for num in &self.0[1..self.0.len()] {
+            formatted.push_str(", ");
+            formatted.push_str(&num.to_string());
+        }
+        write!(f, "{}", formatted)
+    }
+}
+
+impl<H> Debug for Signature<H> {
     fn fmt(&self, f: &mut Formatter) -> core::fmt::Result {
         let mut formatted = String::new();
         formatted.push_str(&self.0[0].to_string());
