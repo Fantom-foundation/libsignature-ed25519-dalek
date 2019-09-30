@@ -182,6 +182,12 @@ where
     Ok(result)
 }
 
+impl<H> Hash for Signature<H> {
+    fn hash<Hsh: Hasher>(&self, state: &mut Hsh) {
+        Hash::hash(&self.0[..], state)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     #[test]
