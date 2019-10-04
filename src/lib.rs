@@ -54,6 +54,15 @@ impl<H: LibHash> LibSignature for Signature<H> {
         let sig: ed25519_dalek::Signature = (*self).try_into()?;
         Ok(pubkey.verify(hash.as_ref(), &sig).is_ok())
     }
+    fn generate_key_pair(&self) -> Result<(Self::PublicKey, Self::SecretKey), Self::Error> {
+        Ok((Self::PublicKey::default(), Self::SecretKey::default()))
+    }
+    fn generate_secret_key(&self) -> Result<Self::SecretKey, Self::Error> {
+        Ok(Self::SecretKey::default())
+    }
+    fn generate_public_key(&self, _sk: Self::SecretKey) -> Result<Self::PublicKey, Self::Error> {
+        Ok(Self::PublicKey::default())
+    }
 }
 
 impl From<ed25519_dalek::PublicKey> for PublicKey {
