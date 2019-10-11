@@ -6,10 +6,12 @@ use core::hash::Hash;
 use core::hash::Hasher;
 use core::marker::PhantomData;
 use ed25519_dalek::{PUBLIC_KEY_LENGTH, SECRET_KEY_LENGTH, SIGNATURE_LENGTH};
+use getrandom::getrandom;
 use libhash::Hash as LibHash;
 use libsignature::PublicKey as LibPublicKey;
 use libsignature::SecretKey as LibSecretKey;
 use libsignature::Signature as LibSignature;
+use rand_core::{CryptoRng, RngCore};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 #[derive(Clone, PartialOrd, Ord, Debug, Deserialize, Serialize)]
@@ -58,7 +60,9 @@ impl<H: LibHash> LibSignature for Signature<H> {
         Ok((Self::PublicKey::default(), Self::SecretKey::default()))
     }
     fn generate_secret_key(&self) -> Result<Self::SecretKey, Self::Error> {
-        Ok(Self::SecretKey::default())
+        let mut csprng: OsRng = OsRng::default();
+        let secret_key: ed25519_dalek::SecretKey = ed25519_dalek::SecretKey::generate(&mut csprng);
+        Ok(secret_key.into())
     }
     fn generate_public_key(&self, _sk: Self::SecretKey) -> Result<Self::PublicKey, Self::Error> {
         Ok(Self::PublicKey::default())
@@ -207,6 +211,37 @@ where
 impl<H> Hash for Signature<H> {
     fn hash<Hsh: Hasher>(&self, state: &mut Hsh) {
         Hash::hash(&self.0[..], state)
+    }
+}
+
+#[derive(Clone, Copy, Debug, Default)]
+struct OsRng;
+
+impl CryptoRng for OsRng {}
+
+impl RngCore for OsRng {
+    fn next_u32(&mut self) -> u32 {
+        rand_core::impls::next_u32_via_fill(self)
+    }
+
+    fn next_u64(&mut self) -> u64 {
+        rand_core::impls::next_u64_via_fill(self)
+    }
+
+    fn fill_bytes(&mut self, dest: &mut [u8]) {
+        if let Err(e) = self.try_fill_bytes(dest) {
+            panic!("Error: {}", e);
+        }
+    }
+
+    fn try_fill_bytes(&mut self, dest: &mut [u8]) -> Result<(), rand_core::Error> {
+        match getrandom(dest) {
+            Err(_) => Err(rand_core::Error::new(
+                rand_core::ErrorKind::Unexpected,
+                "getrandom",
+            )),
+            Ok(_) => Ok(()),
+        }
     }
 }
 

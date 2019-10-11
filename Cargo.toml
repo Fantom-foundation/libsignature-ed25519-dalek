@@ -10,6 +10,8 @@ libhash = { git = "https://github.com/Fantom-foundation/libhash" }
 libsignature = { git = "https://github.com/Fantom-foundation/libsignature" }
 serde = "1.0.101"
 serde_derive = "1.0.101"
+getrandom= "0.1.12"
+rand_core = "=0.3.1"
 
 [dependencies.ed25519-dalek]
 version = "1.0.0-pre.2"
