@@ -57,7 +57,10 @@ impl<H: LibHash> LibSignature for Signature<H> {
         Ok(pubkey.verify(hash.as_ref(), &sig).is_ok())
     }
     fn generate_key_pair(&self) -> Result<(Self::PublicKey, Self::SecretKey), Self::Error> {
-        Ok((Self::PublicKey::default(), Self::SecretKey::default()))
+        let mut csprng: OsRng = OsRng::default();
+        let secret_key: ed25519_dalek::SecretKey = ed25519_dalek::SecretKey::generate(&mut csprng);
+        let public_key: ed25519_dalek::PublicKey = (&secret_key).into();
+        Ok((public_key.into(), secret_key.into()))
     }
     fn generate_secret_key(&self) -> Result<Self::SecretKey, Self::Error> {
         let mut csprng: OsRng = OsRng::default();
