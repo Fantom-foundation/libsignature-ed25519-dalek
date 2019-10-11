@@ -64,8 +64,11 @@ impl<H: LibHash> LibSignature for Signature<H> {
         let secret_key: ed25519_dalek::SecretKey = ed25519_dalek::SecretKey::generate(&mut csprng);
         Ok(secret_key.into())
     }
-    fn generate_public_key(&self, _sk: Self::SecretKey) -> Result<Self::PublicKey, Self::Error> {
-        Ok(Self::PublicKey::default())
+    fn generate_public_key(&self, sk: Self::SecretKey) -> Result<Self::PublicKey, Self::Error> {
+        let dsk: ed25519_dalek::SecretKey = sk.try_into()?;
+        let dpk: ed25519_dalek::PublicKey = (&dsk).into();
+        let pk: Self::PublicKey = dpk.into();
+        Ok(pk)
     }
 }
 
