@@ -56,18 +56,18 @@ impl<H: LibHash> LibSignature for Signature<H> {
         let sig: ed25519_dalek::Signature = (*self).try_into()?;
         Ok(pubkey.verify(hash.as_ref(), &sig).is_ok())
     }
-    fn generate_key_pair(&self) -> Result<(Self::PublicKey, Self::SecretKey), Self::Error> {
+    fn generate_key_pair() -> Result<(Self::PublicKey, Self::SecretKey), Self::Error> {
         let mut csprng: OsRng = OsRng::default();
         let secret_key: ed25519_dalek::SecretKey = ed25519_dalek::SecretKey::generate(&mut csprng);
         let public_key: ed25519_dalek::PublicKey = (&secret_key).into();
         Ok((public_key.into(), secret_key.into()))
     }
-    fn generate_secret_key(&self) -> Result<Self::SecretKey, Self::Error> {
+    fn generate_secret_key() -> Result<Self::SecretKey, Self::Error> {
         let mut csprng: OsRng = OsRng::default();
         let secret_key: ed25519_dalek::SecretKey = ed25519_dalek::SecretKey::generate(&mut csprng);
         Ok(secret_key.into())
     }
-    fn generate_public_key(&self, sk: Self::SecretKey) -> Result<Self::PublicKey, Self::Error> {
+    fn generate_public_key(sk: Self::SecretKey) -> Result<Self::PublicKey, Self::Error> {
         let dsk: ed25519_dalek::SecretKey = sk.try_into()?;
         let dpk: ed25519_dalek::PublicKey = (&dsk).into();
         let pk: Self::PublicKey = dpk.into();
