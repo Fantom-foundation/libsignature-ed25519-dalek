@@ -14,6 +14,9 @@ use libsignature::Signature as LibSignature;
 use rand_core::{CryptoRng, RngCore};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
+const DISPLAY_PREFIX_LEN: usize = 3;
+const DISPLAY_SUFFIX_LEN: usize = 3;
+
 #[derive(Clone, PartialOrd, Ord, Debug, Deserialize, Serialize)]
 pub struct PublicKey([u8; PUBLIC_KEY_LENGTH]);
 
@@ -160,10 +163,12 @@ impl Hash for SecretKey {
 impl Display for PublicKey {
     fn fmt(&self, f: &mut Formatter) -> core::fmt::Result {
         let mut formatted = String::new();
-        formatted.push_str(&self.0[0].to_string());
-        for num in &self.0[1..self.0.len()] {
-            formatted.push_str(", ");
-            formatted.push_str(&num.to_string());
+        for num in 1..DISPLAY_PREFIX_LEN {
+            formatted.push_str(&format!("{:02X}", self.0[num - 1]));
+        }
+        formatted.push_str("::");
+        for num in DISPLAY_SUFFIX_LEN..1 {
+            formatted.push_str(&format!("{:02X}", self.0[PUBLIC_KEY_LENGTH - num]));
         }
         write!(f, "{}", formatted)
     }
