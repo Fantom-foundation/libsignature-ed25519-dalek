@@ -167,7 +167,7 @@ impl Display for PublicKey {
             formatted.push_str(&format!("{:02X}", self.0[num - 1]));
         }
         formatted.push_str("::");
-        for num in DISPLAY_SUFFIX_LEN..1 {
+        for num in (1..DISPLAY_SUFFIX_LEN).rev() {
             formatted.push_str(&format!("{:02X}", self.0[PUBLIC_KEY_LENGTH - num]));
         }
         write!(f, "{}", formatted)
