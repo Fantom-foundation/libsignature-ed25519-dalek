@@ -1,6 +1,6 @@
 libsignature-ed25519-dalek
 ============
-[![Build Status](https://travis-ci.org/Fantom-foundation/libsignature-ed25519-dalek.svg?branch=master)](https://travis-ci.org/Fantom-foundation/libsignature-ed25519-dalek)
+[![Rust: nightly](https://img.shields.io/badge/Rust-nightly-blue.svg)](https://www.rust-lang.org) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE) [![Build Status](https://travis-ci.org/Fantom-foundation/libsignature-ed25519-dalek.svg?branch=master)](https://travis-ci.org/Fantom-foundation/libsignature-ed25519-dalek)
 
 libsignature-ed25519-dalek in Rust.
 
@@ -21,14 +21,17 @@ There are plenty of [IDEs](https://areweideyet.com) and other [Rust development 
 For an example of the traits see:
 https://github.com/Fantom-foundation/libsignature.
 
-### Step-by-step guide
+### CLI instructions
+
 ```bash
 # Install Rust (nightly)
-$ curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain nightly
+$ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly
 # Install cargo-make (cross-platform feature-rich reimplementation of Make)
 $ cargo install --force cargo-make
 # Install rustfmt (Rust formatter)
 $ rustup component add rustfmt
+# Install clippy (Rust linter)
+$ rustup component add clippy
 # Clone this repo
 $ git clone https://github.com/Fantom-foundation/libsignature-ed25519-dalek && cd libsignature-ed25519-dalek
 # Run tests
