@@ -1,6 +1,6 @@
 libsignature-ed25519-dalek
 ============
-[![Build Status](https://travis-ci.org/Fantom-foundation/libsignature-ed25519-dalek.svg?branch=master)](https://travis-ci.org/Fantom-foundation/libsignature-ed25519-dalek)
+![Rust: nightly](https://img.shields.io/badge/Rust-nightly-blue.svg) ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg) [![Build Status](https://travis-ci.org/Fantom-foundation/evm-rs.svg?branch=master)](https://travis-ci.org/Fantom-foundation/evm-rs)
 
 libsignature-ed25519-dalek in Rust.
 
@@ -24,7 +24,7 @@ https://github.com/Fantom-foundation/libsignature.
 ### Step-by-step guide
 ```bash
 # Install Rust (nightly)
-$ curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain nightly
+$ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly
 # Install cargo-make (cross-platform feature-rich reimplementation of Make)
 $ cargo install --force cargo-make
 # Install rustfmt (Rust formatter)
