@@ -11,6 +11,7 @@ use libhash::Hash as LibHash;
 use libsignature::PublicKey as LibPublicKey;
 use libsignature::SecretKey as LibSecretKey;
 use libsignature::Signature as LibSignature;
+use log::debug;
 use rand_core::{CryptoRng, RngCore};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
@@ -48,15 +49,25 @@ impl<H: LibHash> LibSignature for Signature<H> {
     type SecretKey = SecretKey;
     type Error = ed25519_dalek::SignatureError;
     fn sign(hash: H, public_key: PublicKey, secret_key: SecretKey) -> Result<Self, Self::Error> {
-        let secret: ed25519_dalek::SecretKey = secret_key.try_into()?;
-        let public: ed25519_dalek::PublicKey = public_key.try_into()?;
+        let secret: ed25519_dalek::SecretKey = secret_key.clone().try_into()?;
+        let public: ed25519_dalek::PublicKey = public_key.clone().try_into()?;
         let keypair = ed25519_dalek::Keypair { secret, public };
-        Ok(keypair.sign(hash.as_ref()).into())
+        let signature: Self = keypair.sign(hash.as_ref()).into();
+        debug!(
+            "++sign: hash: {}; public:{}; secret:{} -- signature:{}",
+            hash, public_key, secret_key, signature
+        );
+        Ok(signature)
     }
     fn verify(&self, hash: H, key: PublicKey) -> Result<bool, Self::Error> {
-        let pubkey: ed25519_dalek::PublicKey = key.try_into()?;
+        let pubkey: ed25519_dalek::PublicKey = key.clone().try_into()?;
         let sig: ed25519_dalek::Signature = (*self).try_into()?;
-        Ok(pubkey.verify(hash.as_ref(), &sig).is_ok())
+        let res: bool = pubkey.verify(hash.as_ref(), &sig).is_ok();
+        debug!(
+            "++verify: hash: {}; public:{}; signature: {} -- res: {}",
+            hash, key, *self, res
+        );
+        Ok(res)
     }
     fn generate_key_pair() -> Result<(Self::PublicKey, Self::SecretKey), Self::Error> {
         let mut csprng: OsRng = OsRng::default();

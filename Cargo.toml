@@ -1,6 +1,6 @@
 [package]
 name = "libsignature-ed25519-dalek"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["Maxim Zakharov <5158255+Maxime2@users.noreply.github.com>"]
 edition = "2018"
 
@@ -12,6 +12,7 @@ serde = "1.0.101"
 serde_derive = "1.0.101"
 getrandom= "0.1.12"
 rand_core = "=0.3.1"
+log = "0.4.8"
 
 [dependencies.ed25519-dalek]
 version = "1.0.0-pre.2"
