@@ -1,13 +1,13 @@
 [package]
 name = "libsignature-ed25519-dalek"
-version = "0.1.5"
+version = "0.2.0"
 authors = ["Maxim Zakharov <5158255+Maxime2@users.noreply.github.com>"]
 edition = "2018"
 
 [dependencies]
 libcommon-rs = { git = "https://github.com/Fantom-foundation/libcommon-rs" }
 libhash = { git = "https://github.com/Fantom-foundation/libhash" }
-libsignature = { git = "https://github.com/Fantom-foundation/libsignature" }
+libsignature = { git = "https://github.com/Fantom-foundation/libsignature", version="0.2.0" }
 serde = "1.0.101"
 serde_derive = "1.0.101"
 getrandom= "0.1.12"
