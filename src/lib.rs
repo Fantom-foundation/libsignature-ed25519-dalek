@@ -273,8 +273,20 @@ impl RngCore for OsRng {
 
 #[cfg(test)]
 mod tests {
+    use crate::Signature;
+    use libhash_sha3::Hash as EventHash;
+    use libsignature::Signature as LibSignature;
+
     #[test]
     fn it_works() {
         assert_eq!(2 + 2, 4);
+    }
+
+    #[test]
+    fn generate_sign_verify() {
+        let hash = EventHash::default();
+        let kp = Signature::<EventHash>::generate_key_pair().unwrap();
+        let signature = Signature::sign(hash, kp.0.clone(), kp.1).unwrap();
+        assert!(signature.verify(hash, kp.0).is_ok());
     }
 }
