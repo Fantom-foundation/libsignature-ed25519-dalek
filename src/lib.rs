@@ -48,10 +48,9 @@ impl<H: LibHash> LibSignature for Signature<H> {
     type SecretKey = SecretKey;
     type Error = ed25519_dalek::SignatureError;
     fn sign(hash: H, key: SecretKey) -> Result<Self, Self::Error> {
-        let keypair = ed25519_dalek::Keypair {
-            secret: key.try_into()?,
-            public: DEFAULT_PUBLIC_KEY.try_into()?,
-        };
+        let secret: ed25519_dalek::SecretKey = key.try_into()?;
+        let public: ed25519_dalek::PublicKey = (&secret).into();
+        let keypair = ed25519_dalek::Keypair { secret, public };
         Ok(keypair.sign(hash.as_ref()).into())
     }
     fn verify(&self, hash: H, key: PublicKey) -> Result<bool, Self::Error> {
